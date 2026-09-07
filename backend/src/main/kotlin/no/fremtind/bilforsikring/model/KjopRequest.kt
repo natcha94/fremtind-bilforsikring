@@ -1,0 +1,28 @@
+package no.fremtind.bilforsikring.model
+
+import jakarta.validation.constraints.Email
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.Pattern
+
+data class KjopRequest(
+    @field:NotBlank(message = "Registreringsnummer er påkrevd")
+    @field:Pattern(regexp = "^[A-Za-z]{2}\\s?\\d{5}$", message = "Ugyldig format (E.g. AB 12345)")
+    val registreringsnummer: String,
+
+    @field:NotBlank(message = "Bonus er påkrevd")
+    val bonus: String,
+
+    @field:NotBlank(message = "Fødselsnummer er påkrevd")
+    @field:Pattern(regexp = "^\\d{11}$", message = "Fødselsnummer må være 11 siffer")
+    val fodselsnummer: String,
+
+    @field:NotBlank(message = "Fornavn er påkrevd")
+    val fornavn: String,
+
+    @field:NotBlank(message = "Etternavn er påkrevd")
+    val etternavn: String,
+
+    @field:NotBlank(message = "E-post er påkrevd")
+    @field:Email(message = "Ugyldig e-postadresse")
+    val epost: String
+)

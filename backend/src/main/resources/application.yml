@@ -1,0 +1,10 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: bilforsikring
+
+logging:
+  level:
+    no.fremtind: DEBUG
