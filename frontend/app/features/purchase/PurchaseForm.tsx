@@ -1,4 +1,5 @@
 import "./PurchaseForm.scss";
+import { useFetcher } from "react-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -9,7 +10,16 @@ import { Button } from "../../components/Button/Button";
 import { FormField } from "../../components/FormField/FormField";
 import { Select } from "../../components/Select/Select";
 
+type KjopResponse = {
+  avtalenummer: string;
+  status: "OPPRETTET" | "AVTALE_SENDT" | "FEIL";
+};
+
+type ActionData = KjopResponse | { error: string };
+
 export function PurchaseForm() {
+  const fetcher = useFetcher<ActionData>();
+
   const {
     register,
     handleSubmit,
@@ -19,8 +29,12 @@ export function PurchaseForm() {
   });
 
   function onSubmit(data: PurchaseFormValues) {
-    console.log(data);
+    fetcher.submit(data, { method: "POST", encType: "application/json" });
   }
+
+  const isSubmitting = fetcher.state !== "idle";
+  const submitError =
+    fetcher.data && "error" in fetcher.data ? fetcher.data.error : null;
 
   return (
     <div className="purchase-page">
@@ -92,9 +106,11 @@ export function PurchaseForm() {
           error={errors.epost?.message}
         />
 
+        {submitError && <p className="purchase-form__error">{submitError}</p>}
+
         <div className="purchase-form__actions">
-          <Button type="submit" variant="primary">
-            Kjøp
+          <Button type="submit" variant="primary" disabled={isSubmitting}>
+            {isSubmitting ? "Sender..." : "Kjøp"}
           </Button>
           <Button variant="secondary">Avbryt</Button>
         </div>
