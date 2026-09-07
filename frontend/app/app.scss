@@ -1,0 +1,33 @@
+@font-face {
+  font-family: "Profilfont";
+  src: url("/fonts/Profilfont-Regular-Web.woff2") format("woff2"),
+    url("/fonts/Profilfont-Regular-Web.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Profilfont";
+  src: url("/fonts/Profilfont-Bold-Web.woff2") format("woff2"),
+    url("/fonts/Profilfont-Bold-Web.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --font-sans: "Profilfont", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+html,
+body {
+  font-family: var(--font-sans);
+  background-color: #fff;
+
+  @media (prefers-color-scheme: dark) {
+    background-color: #030712;
+    color-scheme: dark;
+  }
+}
