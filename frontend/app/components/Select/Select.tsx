@@ -1,4 +1,5 @@
 import "./Select.scss";
+import { type UseFormRegisterReturn } from "react-hook-form";
 
 type SelectOption = {
   label: string;
@@ -9,12 +10,18 @@ type SelectProps = {
   id: string;
   options: SelectOption[];
   placeholder?: string;
-  defaultValue?: string;
+  registration?: UseFormRegisterReturn;
+  error?: boolean;
 };
 
-export function Select({ id, options, placeholder, defaultValue = "" }: SelectProps) {
+export function Select({ id, options, placeholder, registration, error }: SelectProps) {
   return (
-    <select className="select" id={id} defaultValue={defaultValue}>
+    <select
+      className={`select${error ? " select--error" : ""}`}
+      id={id}
+      defaultValue=""
+      {...registration}
+    >
       {placeholder && (
         <option value="" disabled>
           {placeholder}

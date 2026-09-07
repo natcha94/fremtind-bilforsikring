@@ -11,4 +11,8 @@
   &:focus {
     border-color: #005aa4;
   }
+
+  &--error {
+    border-color: #c0392b;
+  }
 }

@@ -1,9 +1,27 @@
 import "./PurchaseForm.scss";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  purchaseFormSchema,
+  type PurchaseFormValues,
+} from "./purchaseFormSchema";
 import { Button } from "../../components/Button/Button";
 import { FormField } from "../../components/FormField/FormField";
 import { Select } from "../../components/Select/Select";
 
 export function PurchaseForm() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<PurchaseFormValues>({
+    resolver: zodResolver(purchaseFormSchema),
+  });
+
+  function onSubmit(data: PurchaseFormValues) {
+    console.log(data);
+  }
+
   return (
     <div className="purchase-page">
       <h1 className="purchase-page__title">Kjøp Bilforsikring</h1>
@@ -14,13 +32,21 @@ export function PurchaseForm() {
         og hvordan du bruker den.
       </p>
 
-      <form className="purchase-form">
-        <FormField id="reg-number" label="Bilens registreringsnummer" placeholder="E.g. AB 12345" />
+      <form className="purchase-form" onSubmit={handleSubmit(onSubmit)}>
+        <FormField
+          id="reg-number"
+          label="Bilens registreringsnummer"
+          placeholder="E.g. AB 12345"
+          registration={register("registreringsnummer")}
+          error={errors.registreringsnummer?.message}
+        />
 
-        <FormField id="bonus" label="Din bonus">
+        <FormField id="bonus" label="Din bonus" error={errors.bonus?.message}>
           <Select
             id="bonus"
             placeholder="Velg bonus"
+            registration={register("bonus")}
+            error={!!errors.bonus}
             options={[
               { label: "0%", value: "0" },
               { label: "10%", value: "10" },
@@ -35,15 +61,41 @@ export function PurchaseForm() {
           />
         </FormField>
 
-        <FormField id="fodselsnummer" label="Fødselsnummer" placeholder="11 siffer" />
+        <FormField
+          id="fodselsnummer"
+          label="Fødselsnummer"
+          placeholder="11 siffer"
+          registration={register("fodselsnummer")}
+          error={errors.fodselsnummer?.message}
+        />
+
         <div className="purchase-form__row">
-          <FormField id="fornavn" label="Fornavn" />
-          <FormField id="etternavn" label="Etternavn" />
+          <FormField
+            id="fornavn"
+            label="Fornavn"
+            registration={register("fornavn")}
+            error={errors.fornavn?.message}
+          />
+          <FormField
+            id="etternavn"
+            label="Etternavn"
+            registration={register("etternavn")}
+            error={errors.etternavn?.message}
+          />
         </div>
-        <FormField id="epost" label="E-post" type="email" />
+
+        <FormField
+          id="epost"
+          label="E-post"
+          type="email"
+          registration={register("epost")}
+          error={errors.epost?.message}
+        />
 
         <div className="purchase-form__actions">
-          <Button type="submit" variant="primary">Kjøp</Button>
+          <Button type="submit" variant="primary">
+            Kjøp
+          </Button>
           <Button variant="secondary">Avbryt</Button>
         </div>
       </form>
