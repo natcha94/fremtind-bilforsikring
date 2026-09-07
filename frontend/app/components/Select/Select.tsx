@@ -1,4 +1,5 @@
 import "./Select.scss";
+import { clsx } from "clsx";
 import { type UseFormRegisterReturn } from "react-hook-form";
 
 type SelectOption = {
@@ -17,7 +18,7 @@ type SelectProps = {
 export function Select({ id, options, placeholder, registration, error }: SelectProps) {
   return (
     <select
-      className={`select${error ? " select--error" : ""}`}
+      className={clsx("select", error && "select--error")}
       id={id}
       defaultValue=""
       {...registration}

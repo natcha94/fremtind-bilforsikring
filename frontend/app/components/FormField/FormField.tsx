@@ -1,4 +1,5 @@
 import "./FormField.scss";
+import { clsx } from "clsx";
 import { type UseFormRegisterReturn } from "react-hook-form";
 
 type FormFieldProps = {
@@ -19,7 +20,7 @@ export function FormField({ id, label, type = "text", placeholder, children, err
       </label>
       {children ?? (
         <input
-          className={`form-field__input${error ? " form-field__input--error" : ""}`}
+          className={clsx("form-field__input", error && "form-field__input--error")}
           id={id}
           type={type}
           placeholder={placeholder}
