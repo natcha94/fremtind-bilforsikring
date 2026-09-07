@@ -22,28 +22,13 @@
   flex-direction: column;
   gap: 20px;
 
-  &__field {
+  &__row {
     display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
+    flex-wrap: wrap;
+    gap: 16px;
 
-  &__label {
-    font-size: 0.875rem;
-    font-weight: 700;
-  }
-
-  &__input {
-    padding: 10px 14px;
-    font-size: 1rem;
-    font-family: inherit;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    outline: none;
-    transition: border-color 0.2s;
-
-    &:focus {
-      border-color: #005AA4;
+    > * {
+      flex: 1 1 200px;
     }
   }
 
@@ -51,37 +36,5 @@
     display: flex;
     gap: 12px;
     margin-top: 8px;
-  }
-
-  &__btn {
-    padding: 12px 28px;
-    font-size: 1rem;
-    font-family: inherit;
-    font-weight: 700;
-    border-radius: 4px;
-    cursor: pointer;
-    border: 2px solid transparent;
-    transition: background-color 0.2s, color 0.2s;
-
-    &--primary {
-      background-color: #005AA4;
-      color: #fff;
-      border-color: #005AA4;
-
-      &:hover {
-        background-color: #004a87;
-        border-color: #004a87;
-      }
-    }
-
-    &--secondary {
-      background-color: transparent;
-      color: #005AA4;
-      border-color: #005AA4;
-
-      &:hover {
-        background-color: #f0f6fb;
-      }
-    }
   }
 }

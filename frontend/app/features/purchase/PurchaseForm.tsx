@@ -1,4 +1,7 @@
 import "./PurchaseForm.scss";
+import { Button } from "../../components/Button/Button";
+import { FormField } from "../../components/FormField/FormField";
+import { Select } from "../../components/Select/Select";
 
 export function PurchaseForm() {
   return (
@@ -12,81 +15,36 @@ export function PurchaseForm() {
       </p>
 
       <form className="purchase-form">
-        <div className="purchase-form__field">
-          <label className="purchase-form__label" htmlFor="reg-number">
-            Bilens registreringsnummer
-          </label>
-          <input
-            className="purchase-form__input"
-            id="reg-number"
-            type="text"
-            placeholder="E.g. AB 12345"
-          />
-        </div>
+        <FormField id="reg-number" label="Bilens registreringsnummer" placeholder="E.g. AB 12345" />
 
-        <div className="purchase-form__field">
-          <label className="purchase-form__label" htmlFor="bonus">
-            Din bonus
-          </label>
-          <input
-            className="purchase-form__input"
+        <FormField id="bonus" label="Din bonus">
+          <Select
             id="bonus"
-            type="text"
+            placeholder="Velg bonus"
+            options={[
+              { label: "0%", value: "0" },
+              { label: "10%", value: "10" },
+              { label: "20%", value: "20" },
+              { label: "30%", value: "30" },
+              { label: "40%", value: "40" },
+              { label: "50%", value: "50" },
+              { label: "60%", value: "60" },
+              { label: "70%", value: "70" },
+              { label: "75%", value: "75" },
+            ]}
           />
-        </div>
+        </FormField>
 
-        <div className="purchase-form__field">
-          <label className="purchase-form__label" htmlFor="fodselsnummer">
-            Fødselsnummer
-          </label>
-          <input
-            className="purchase-form__input"
-            id="fodselsnummer"
-            type="text"
-            placeholder="11 siffer"
-          />
+        <FormField id="fodselsnummer" label="Fødselsnummer" placeholder="11 siffer" />
+        <div className="purchase-form__row">
+          <FormField id="fornavn" label="Fornavn" />
+          <FormField id="etternavn" label="Etternavn" />
         </div>
-
-        <div className="purchase-form__field">
-          <label className="purchase-form__label" htmlFor="fornavn">
-            Fornavn
-          </label>
-          <input
-            className="purchase-form__input"
-            id="fornavn"
-            type="text"
-          />
-        </div>
-
-        <div className="purchase-form__field">
-          <label className="purchase-form__label" htmlFor="etternavn">
-            Etternavn
-          </label>
-          <input
-            className="purchase-form__input"
-            id="etternavn"
-            type="text"
-          />
-        </div>
-
-        <div className="purchase-form__field">
-          <label className="purchase-form__label" htmlFor="epost">
-            E-post
-          </label>
-          <input
-            className="purchase-form__input"
-            id="epost"
-            type="email"
-          />
-        </div>
+        <FormField id="epost" label="E-post" type="email" />
 
         <div className="purchase-form__actions">
-          <button type="submit" className="purchase-form__btn purchase-form__btn--primary">
-            Kjøp
-          </button>
-          <button type="button" className="purchase-form__btn purchase-form__btn--secondary">
-            Avbryt
-          </button>
+          <Button type="submit" variant="primary">Kjøp</Button>
+          <Button variant="secondary">Avbryt</Button>
         </div>
       </form>
     </div>
