@@ -1,3 +1,4 @@
+import { redirect } from "react-router";
 import type { Route } from "./+types/home";
 import { PurchaseForm } from "../features/purchase/PurchaseForm";
 
@@ -17,7 +18,7 @@ export async function action({ request }: Route.ActionArgs) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
-    }
+    },
   );
 
   if (!response.ok) {
@@ -25,7 +26,8 @@ export async function action({ request }: Route.ActionArgs) {
     return { error: error?.detail ?? "Noe gikk galt. Prøv igjen." };
   }
 
-  return await response.json();
+  const { avtalenummer } = await response.json();
+  return redirect(`/bekreftelse?avtalenummer=${avtalenummer}`);
 }
 
 export default function Home() {

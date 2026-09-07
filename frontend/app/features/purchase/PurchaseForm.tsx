@@ -1,5 +1,5 @@
 import "./PurchaseForm.scss";
-import { useFetcher } from "react-router";
+import { useSubmit, useActionData, useNavigation } from "react-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -10,15 +10,12 @@ import { Button } from "../../components/Button/Button";
 import { FormField } from "../../components/FormField/FormField";
 import { Select } from "../../components/Select/Select";
 
-type KjopResponse = {
-  avtalenummer: string;
-  status: "OPPRETTET" | "AVTALE_SENDT" | "FEIL";
-};
-
-type ActionData = KjopResponse | { error: string };
+type ActionData = { error: string };
 
 export function PurchaseForm() {
-  const fetcher = useFetcher<ActionData>();
+  const submit = useSubmit();
+  const actionData = useActionData<ActionData>();
+  const navigation = useNavigation();
 
   const {
     register,
@@ -28,16 +25,14 @@ export function PurchaseForm() {
     resolver: zodResolver(purchaseFormSchema),
   });
 
+  const isSubmitting = navigation.state === "submitting";
+
   function onSubmit(data: PurchaseFormValues) {
-    fetcher.submit(data, { method: "POST", encType: "application/json" });
+    submit(data, { method: "POST", encType: "application/json" });
   }
 
-  const isSubmitting = fetcher.state !== "idle";
-  const submitError =
-    fetcher.data && "error" in fetcher.data ? fetcher.data.error : null;
-
   return (
-    <div className="purchase-page">
+    <main className="purchase-page">
       <h1 className="purchase-page__title">Kjøp Bilforsikring</h1>
       <p className="purchase-page__description">
         Det er fire forskjellige forsikringer å velge mellom. Avsvarsforsikring
@@ -46,7 +41,12 @@ export function PurchaseForm() {
         og hvordan du bruker den.
       </p>
 
-      <form className="purchase-form" onSubmit={handleSubmit(onSubmit)}>
+      <form
+        className="purchase-form"
+        onSubmit={handleSubmit(onSubmit)}
+        aria-busy={isSubmitting}
+        noValidate
+      >
         <FormField
           id="reg-number"
           label="Bilens registreringsnummer"
@@ -106,7 +106,11 @@ export function PurchaseForm() {
           error={errors.epost?.message}
         />
 
-        {submitError && <p className="purchase-form__error">{submitError}</p>}
+        {actionData?.error && (
+          <p role="alert" className="purchase-form__error">
+            {actionData.error}
+          </p>
+        )}
 
         <div className="purchase-form__actions">
           <Button type="submit" variant="primary" disabled={isSubmitting}>
@@ -115,6 +119,6 @@ export function PurchaseForm() {
           <Button variant="secondary">Avbryt</Button>
         </div>
       </form>
-    </div>
+    </main>
   );
 }
