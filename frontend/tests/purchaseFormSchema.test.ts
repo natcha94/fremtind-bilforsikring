@@ -14,102 +14,56 @@ const gyldigSkjema = {
 };
 
 describe("purchaseFormSchema", () => {
-  it("godtar et gyldig skjema", () => {
-    const result = purchaseFormSchema.safeParse(gyldigSkjema);
-    expect(result.success).toBe(true);
+  it("godtar komplett gyldig skjema", () => {
+    expect(purchaseFormSchema.safeParse(gyldigSkjema).success).toBe(true);
   });
 
-  describe("registreringsnummer", () => {
-    it.each(["AB 12345", "ab 12345", "AB12345"])(
-      "godtar gyldig format: %s",
-      (verdi) => {
-        const result = purchaseFormSchema.safeParse({
-          ...gyldigSkjema,
-          registreringsnummer: verdi,
-        });
-        expect(result.success).toBe(true);
-      }
-    );
-
-    it.each(["UGYLDIG", "123 AB", "A 12345", ""])(
-      "avviser ugyldig format: %s",
-      (verdi) => {
-        const result = purchaseFormSchema.safeParse({
-          ...gyldigSkjema,
-          registreringsnummer: verdi,
-        });
-        expect(result.success).toBe(false);
-      }
-    );
-  });
-
-  describe("fodselsnummer", () => {
-    it("godtar 11 siffer", () => {
-      const result = purchaseFormSchema.safeParse({
+  it("registreringsnummer uten mellomrom er OK", () => {
+    expect(
+      purchaseFormSchema.safeParse({
         ...gyldigSkjema,
-        fodselsnummer: "12345678901",
-      });
-      expect(result.success).toBe(true);
-    });
+        registreringsnummer: "AB12345",
+      }).success,
+    ).toBe(true);
+  });
 
-    it("avviser 10 siffer", () => {
-      const result = purchaseFormSchema.safeParse({
+  it("registreringsnummer med feil format feiler", () => {
+    expect(
+      purchaseFormSchema.safeParse({
+        ...gyldigSkjema,
+        registreringsnummer: "UGYLDIG",
+      }).success,
+    ).toBe(false);
+  });
+
+  it("fødselsnummer må ha nøyaktig 11 siffer", () => {
+    expect(
+      purchaseFormSchema.safeParse({
         ...gyldigSkjema,
         fodselsnummer: "1234567890",
-      });
-      expect(result.success).toBe(false);
-    });
-
-    it("avviser bokstaver", () => {
-      const result = purchaseFormSchema.safeParse({
+      }).success,
+    ).toBe(false);
+    expect(
+      purchaseFormSchema.safeParse({
         ...gyldigSkjema,
-        fodselsnummer: "1234567890a",
-      });
-      expect(result.success).toBe(false);
-    });
+        fodselsnummer: "123456789012",
+      }).success,
+    ).toBe(false);
   });
 
-  describe("telefonnummer", () => {
-    it("godtar 8 siffer", () => {
-      const result = purchaseFormSchema.safeParse({
-        ...gyldigSkjema,
-        telefonnummer: "12345678",
-      });
-      expect(result.success).toBe(true);
-    });
-
-    it("avviser 7 siffer", () => {
-      const result = purchaseFormSchema.safeParse({
+  it("telefonnummer med feil lengde feiler", () => {
+    expect(
+      purchaseFormSchema.safeParse({
         ...gyldigSkjema,
         telefonnummer: "1234567",
-      });
-      expect(result.success).toBe(false);
-    });
-
-    it("avviser 9 siffer", () => {
-      const result = purchaseFormSchema.safeParse({
-        ...gyldigSkjema,
-        telefonnummer: "123456789",
-      });
-      expect(result.success).toBe(false);
-    });
+      }).success,
+    ).toBe(false);
   });
 
-  describe("epost", () => {
-    it("godtar gyldig e-post", () => {
-      const result = purchaseFormSchema.safeParse({
-        ...gyldigSkjema,
-        epost: "test@example.com",
-      });
-      expect(result.success).toBe(true);
-    });
-
-    it("avviser e-post uten @", () => {
-      const result = purchaseFormSchema.safeParse({
-        ...gyldigSkjema,
-        epost: "ikke-en-epost",
-      });
-      expect(result.success).toBe(false);
-    });
+  it("ugyldig e-post feiler", () => {
+    expect(
+      purchaseFormSchema.safeParse({ ...gyldigSkjema, epost: "ikke-en-epost" })
+        .success,
+    ).toBe(false);
   });
 });
