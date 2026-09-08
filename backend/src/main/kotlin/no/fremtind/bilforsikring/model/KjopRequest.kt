@@ -10,6 +10,7 @@ data class KjopRequest(
     val registreringsnummer: String,
 
     @field:NotBlank(message = "Bonus er påkrevd")
+    @field:Pattern(regexp = "^(0|10|20|30|40|50|60|70|75)$", message = "Ugyldig bonusverdi")
     val bonus: String,
 
     @field:NotBlank(message = "Fødselsnummer er påkrevd")
