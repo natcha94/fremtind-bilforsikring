@@ -1,13 +1,21 @@
 package no.fremtind.bilforsikring.service
 
+import no.fremtind.bilforsikring.client.BrevtjenesteClient
+import no.fremtind.bilforsikring.client.FagsystemClient
 import no.fremtind.bilforsikring.model.AvtaleStatus
 import no.fremtind.bilforsikring.model.KjopRequest
 import no.fremtind.bilforsikring.model.KjopResponse
+import no.fremtind.bilforsikring.model.OppdaterAvtaleStatusRequest
+import no.fremtind.bilforsikring.model.OpprettAvtaleRequest
+import no.fremtind.bilforsikring.model.OpprettKundeRequest
+import no.fremtind.bilforsikring.model.SendAvtaleRequest
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 @Service
 class BilforsikringService(
+    private val fagsystemClient: FagsystemClient,
+    private val brevtjenesteClient: BrevtjenesteClient
 ) {
 
     private val log = LoggerFactory.getLogger(BilforsikringService::class.java)
@@ -15,10 +23,43 @@ class BilforsikringService(
     fun kjopForsikring(request: KjopRequest): KjopResponse {
         log.info("Starter kjøp av bilforsikring for kjøretøy {}", request.registreringsnummer)
 
-        log.info("Kjøp fullført")
+        val kundeResponse = fagsystemClient.opprettKunde(
+            OpprettKundeRequest(
+                fodselsnummer = request.fodselsnummer,
+                fornavn = request.fornavn,
+                etternavn = request.etternavn,
+                epost = request.epost
+            )
+        )
+
+        val avtaleResponse = fagsystemClient.opprettAvtale(
+            OpprettAvtaleRequest(
+                kundenummer = kundeResponse.kundenummer,
+                registreringsnummer = request.registreringsnummer,
+                bonus = request.bonus
+            )
+        )
+
+        brevtjenesteClient.sendAvtale(
+            SendAvtaleRequest(
+                avtalenummer = avtaleResponse.avtalenummer,
+                mottakerEpost = request.epost,
+                mottakerNavn = "${request.fornavn} ${request.etternavn}",
+                registreringsnummer = request.registreringsnummer
+            )
+        )
+
+        fagsystemClient.oppdaterAvtaleStatus(
+            OppdaterAvtaleStatusRequest(
+                avtalenummer = avtaleResponse.avtalenummer,
+                status = AvtaleStatus.AVTALE_SENDT
+            )
+        )
+
+        log.info("Kjøp fullført for avtale {}", avtaleResponse.avtalenummer)
 
         return KjopResponse(
-            avtalenummer = "123456",
+            avtalenummer = avtaleResponse.avtalenummer,
             status = AvtaleStatus.AVTALE_SENDT
         )
     }
