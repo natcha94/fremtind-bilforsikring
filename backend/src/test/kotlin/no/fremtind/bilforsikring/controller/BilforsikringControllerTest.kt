@@ -71,8 +71,7 @@ class BilforsikringControllerTest {
             content = objectMapper.writeValueAsString(gyldigRequest.copy(registreringsnummer = "UGYLDIG"))
         }.andExpect {
             status { isBadRequest() }
-            jsonPath("$.title") { value("Valideringsfeil") }
-            jsonPath("$.feil.registreringsnummer") { exists() }
+            jsonPath("$.feil.registreringsnummer") { value("Ugyldig format (f.eks. AB 12345)") }
         }
     }
 
@@ -83,8 +82,7 @@ class BilforsikringControllerTest {
             content = objectMapper.writeValueAsString(gyldigRequest.copy(fodselsnummer = "123"))
         }.andExpect {
             status { isBadRequest() }
-            jsonPath("$.title") { value("Valideringsfeil") }
-            jsonPath("$.feil.fodselsnummer") { exists() }
+            jsonPath("$.feil.fodselsnummer") { value("Fødselsnummer må være 11 siffer") }
         }
     }
 

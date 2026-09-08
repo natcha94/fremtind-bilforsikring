@@ -34,17 +34,24 @@ Appen kjører på [http://localhost:5173](http://localhost:5173).
 | `npm run build` | Bygg for produksjon |
 | `npm run start` | Start produksjonsserver |
 | `npm run typecheck` | Kjør TypeScript-sjekk |
+| `npm run test:unit` | Kjør enhetstester (Vitest) |
 | `npm run test:e2e` | Kjør Playwright-tester |
 
 ## Tester
 
-E2E-testene bruker Playwright og starter en mock-backend automatisk på port 3001, så du trenger ikke ha den ekte backend kjørende.
+Enhetstestene dekker skjemavalidering og dekningstype-konstanter:
+
+```bash
+npm run test:unit
+```
+
+E2E-testene bruker Playwright med en mock-backend på port 3001, så du trenger ikke ha den ekte backend kjørende:
 
 ```bash
 npm run test:e2e
 ```
 
-Merk: dev-serveren på port 5173 må ikke kjøre når du kjører testene, da Playwright starter sin egen instans på port 5174.
+Merk: dev-serveren på port 5173 må ikke kjøre når du kjører E2E-testene, da Playwright starter sin egen instans på port 5174.
 
 ## Struktur
 

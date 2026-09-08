@@ -1,9 +1,7 @@
 import "./Button.scss";
 
-type ButtonVariant = "primary" | "secondary";
-
 type ButtonProps = {
-  variant: ButtonVariant;
+  variant: "primary" | "secondary";
   type?: "button" | "submit" | "reset";
   disabled?: boolean;
   onClick?: () => void;
