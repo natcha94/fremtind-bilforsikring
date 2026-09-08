@@ -6,7 +6,7 @@ import {
 } from "../app/features/purchase/dekningstype";
 
 describe("dekningstype", () => {
-  it("alle typer har en norsk label", () => {
+  it("alle typer har en label", () => {
     for (const type of DEKNINGSTYPER) {
       expect(DEKNINGSTYPE_LABELS[type]).toBeTruthy();
     }
