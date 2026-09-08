@@ -3,6 +3,7 @@ package no.fremtind.bilforsikring.service
 import no.fremtind.bilforsikring.client.BrevtjenesteClient
 import no.fremtind.bilforsikring.client.FagsystemClient
 import no.fremtind.bilforsikring.model.AvtaleStatus
+import no.fremtind.bilforsikring.model.Dekningstype
 import no.fremtind.bilforsikring.model.KjopRequest
 import no.fremtind.bilforsikring.model.OppdaterAvtaleStatusResponse
 import no.fremtind.bilforsikring.model.OpprettAvtaleResponse
@@ -17,6 +18,7 @@ import org.mockito.kotlin.mock
 import org.mockito.kotlin.never
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
+import java.time.LocalDate
 
 class BilforsikringServiceTest {
 
@@ -24,13 +26,18 @@ class BilforsikringServiceTest {
     private val brevtjenesteClient: BrevtjenesteClient = mock()
     private val service = BilforsikringService(fagsystemClient, brevtjenesteClient)
 
+    private val startdato = LocalDate.of(2026, 10, 1)
+
     private val gyldigRequest = KjopRequest(
         registreringsnummer = "AB 12345",
         bonus = "75",
+        dekningstype = Dekningstype.KASKO,
+        startdato = startdato,
         fodselsnummer = "12345678901",
         fornavn = "Ola",
         etternavn = "Nordmann",
-        epost = "ola@nordmann.no"
+        epost = "ola@nordmann.no",
+        telefonnummer = "12345678"
     )
 
     private fun mockHappyPath(avtalenummer: String = "AVT-ABC123") {
@@ -38,7 +45,7 @@ class BilforsikringServiceTest {
             OpprettKundeResponse(kundenummer = "KND-001")
         )
         whenever(fagsystemClient.opprettAvtale(any())).thenReturn(
-            OpprettAvtaleResponse(avtalenummer = avtalenummer)
+            OpprettAvtaleResponse(avtalenummer = avtalenummer, arspremie = "5000", startdato = startdato)
         )
         whenever(brevtjenesteClient.sendAvtale(any())).thenReturn(
             SendAvtaleResponse(utsendingStatus = "SENDT", levert = true)
@@ -56,6 +63,17 @@ class BilforsikringServiceTest {
 
         assertEquals("AVT-ABC123", response.avtalenummer)
         assertEquals(AvtaleStatus.AVTALE_SENDT, response.status)
+        assertEquals("5000", response.arspremie)
+    }
+
+    @Test
+    fun `kjopForsikring returnerer startdato og dekningstype fra foresporselen`() {
+        mockHappyPath()
+
+        val response = service.kjopForsikring(gyldigRequest)
+
+        assertEquals(startdato, response.startdato)
+        assertEquals(Dekningstype.KASKO, response.dekningstype)
     }
 
     @Test
@@ -68,7 +86,8 @@ class BilforsikringServiceTest {
             req.fodselsnummer == "12345678901" &&
             req.fornavn == "Ola" &&
             req.etternavn == "Nordmann" &&
-            req.epost == "ola@nordmann.no"
+            req.epost == "ola@nordmann.no" &&
+            req.telefonnummer == "12345678"
         })
     }
 
@@ -81,7 +100,9 @@ class BilforsikringServiceTest {
         verify(fagsystemClient).opprettAvtale(argThat { req ->
             req.kundenummer == "KND-001" &&
             req.registreringsnummer == "AB 12345" &&
-            req.bonus == "75"
+            req.bonus == "75" &&
+            req.dekningstype == Dekningstype.KASKO &&
+            req.startdato == startdato
         })
     }
 
@@ -94,7 +115,8 @@ class BilforsikringServiceTest {
         verify(brevtjenesteClient).sendAvtale(argThat { req ->
             req.avtalenummer == "AVT-ABC123" &&
             req.mottakerEpost == "ola@nordmann.no" &&
-            req.mottakerNavn == "Ola Nordmann"
+            req.mottakerNavn == "Ola Nordmann" &&
+            req.dekningstype == Dekningstype.KASKO
         })
     }
 
@@ -139,7 +161,7 @@ class BilforsikringServiceTest {
     @Test
     fun `kjopForsikring kaster exception nar brevtjenesten feiler og oppdaterer ikke avtalestatus`() {
         whenever(fagsystemClient.opprettKunde(any())).thenReturn(OpprettKundeResponse(kundenummer = "KND-001"))
-        whenever(fagsystemClient.opprettAvtale(any())).thenReturn(OpprettAvtaleResponse(avtalenummer = "AVT-ABC123"))
+        whenever(fagsystemClient.opprettAvtale(any())).thenReturn(OpprettAvtaleResponse(avtalenummer = "AVT-ABC123", arspremie = "5000", startdato = startdato))
         whenever(brevtjenesteClient.sendAvtale(any())).thenThrow(RuntimeException("Brevtjenesten er nede"))
 
         assertThrows<RuntimeException> {

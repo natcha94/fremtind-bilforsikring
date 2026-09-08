@@ -1,10 +1,13 @@
 package no.fremtind.bilforsikring.model
 
+import java.time.LocalDate
+
 data class OpprettKundeRequest(
     val fodselsnummer: String,
     val fornavn: String,
     val etternavn: String,
-    val epost: String
+    val epost: String,
+    val telefonnummer: String
 )
 
 data class OpprettKundeResponse(
@@ -14,11 +17,15 @@ data class OpprettKundeResponse(
 data class OpprettAvtaleRequest(
     val kundenummer: String,
     val registreringsnummer: String,
-    val bonus: String
+    val bonus: String,
+    val dekningstype: Dekningstype,
+    val startdato: LocalDate
 )
 
 data class OpprettAvtaleResponse(
-    val avtalenummer: String
+    val avtalenummer: String,
+    val arspremie: String,
+    val startdato: LocalDate
 )
 
 data class OppdaterAvtaleStatusRequest(

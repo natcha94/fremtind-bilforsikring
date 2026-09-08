@@ -24,7 +24,11 @@ class FagsystemClient {
     fun opprettAvtale(request: OpprettAvtaleRequest): OpprettAvtaleResponse {
         val avtalenummer = "AVT-${UUID.randomUUID().toString().take(8).uppercase()}"
         log.info("Opprettet avtale {} for kunde {}", avtalenummer, request.kundenummer)
-        return OpprettAvtaleResponse(avtalenummer = avtalenummer)
+        return OpprettAvtaleResponse(
+            avtalenummer = avtalenummer,
+            arspremie = "5000",
+            startdato = request.startdato
+        )
     }
 
     fun oppdaterAvtaleStatus(request: OppdaterAvtaleStatusRequest): OppdaterAvtaleStatusResponse {

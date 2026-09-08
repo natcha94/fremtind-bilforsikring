@@ -28,7 +28,8 @@ class BilforsikringService(
                 fodselsnummer = request.fodselsnummer,
                 fornavn = request.fornavn,
                 etternavn = request.etternavn,
-                epost = request.epost
+                epost = request.epost,
+                telefonnummer = request.telefonnummer
             )
         )
 
@@ -36,7 +37,9 @@ class BilforsikringService(
             OpprettAvtaleRequest(
                 kundenummer = kunde.kundenummer,
                 registreringsnummer = request.registreringsnummer,
-                bonus = request.bonus
+                bonus = request.bonus,
+                dekningstype = request.dekningstype,
+                startdato = request.startdato
             )
         )
 
@@ -45,7 +48,9 @@ class BilforsikringService(
                 avtalenummer = avtale.avtalenummer,
                 mottakerEpost = request.epost,
                 mottakerNavn = "${request.fornavn} ${request.etternavn}",
-                registreringsnummer = request.registreringsnummer
+                registreringsnummer = request.registreringsnummer,
+                dekningstype = request.dekningstype,
+                startdato = avtale.startdato
             )
         )
 
@@ -60,7 +65,10 @@ class BilforsikringService(
 
         return KjopResponse(
             avtalenummer = avtale.avtalenummer,
-            status = AvtaleStatus.AVTALE_SENDT
+            status = AvtaleStatus.AVTALE_SENDT,
+            dekningstype = request.dekningstype,
+            startdato = avtale.startdato,
+            arspremie = avtale.arspremie
         )
     }
 }
