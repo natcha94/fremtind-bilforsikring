@@ -6,6 +6,7 @@ import {
   purchaseFormSchema,
   type PurchaseFormValues,
 } from "./purchaseFormSchema";
+import { DEKNINGSTYPE_OPTIONS } from "./dekningstype";
 import { Button } from "../../components/Button/Button";
 import { FormField } from "../../components/FormField/FormField";
 import { Select } from "../../components/Select/Select";
@@ -55,6 +56,20 @@ export function PurchaseForm() {
           error={errors.registreringsnummer?.message}
         />
 
+        <FormField
+          id="dekningstype"
+          label="Dekningstype"
+          error={errors.dekningstype?.message}
+        >
+          <Select
+            id="dekningstype"
+            placeholder="Velg dekningstype"
+            registration={register("dekningstype")}
+            error={!!errors.dekningstype}
+            options={DEKNINGSTYPE_OPTIONS}
+          />
+        </FormField>
+
         <FormField id="bonus" label="Din bonus" error={errors.bonus?.message}>
           <Select
             id="bonus"
@@ -74,6 +89,14 @@ export function PurchaseForm() {
             ]}
           />
         </FormField>
+
+        <FormField
+          id="startdato"
+          label="Startdato"
+          type="date"
+          registration={register("startdato")}
+          error={errors.startdato?.message}
+        />
 
         <FormField
           id="fodselsnummer"
@@ -104,6 +127,15 @@ export function PurchaseForm() {
           type="email"
           registration={register("epost")}
           error={errors.epost?.message}
+        />
+
+        <FormField
+          id="telefonnummer"
+          label="Telefonnummer"
+          type="tel"
+          placeholder="8 siffer"
+          registration={register("telefonnummer")}
+          error={errors.telefonnummer?.message}
         />
 
         {actionData?.error && (

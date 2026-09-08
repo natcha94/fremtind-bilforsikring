@@ -1,6 +1,7 @@
 import { redirect } from "react-router";
 import type { Route } from "./+types/home";
 import { PurchaseForm } from "../features/purchase/PurchaseForm";
+import { getSession, commitSession } from "../sessions.server";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -26,8 +27,14 @@ export async function action({ request }: Route.ActionArgs) {
     return { error: error?.detail ?? "Noe gikk galt. Prøv igjen." };
   }
 
-  const { avtalenummer } = await response.json();
-  return redirect(`/bekreftelse?avtalenummer=${avtalenummer}`);
+  const data = await response.json();
+
+  const session = await getSession(request.headers.get("Cookie"));
+  session.set("bekreftelse", data);
+
+  return redirect("/bekreftelse", {
+    headers: { "Set-Cookie": await commitSession(session) },
+  });
 }
 
 export default function Home() {

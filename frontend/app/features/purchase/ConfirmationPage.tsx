@@ -1,11 +1,21 @@
 import "./ConfirmationPage.scss";
 import { Link } from "react-router";
+import { type Dekningstype, DEKNINGSTYPE_LABELS } from "./dekningstype";
+
+function formatDate(isoDate: string) {
+  return new Intl.DateTimeFormat("nb-NO", { dateStyle: "long" }).format(
+    new Date(isoDate + "T12:00:00")
+  );
+}
 
 type Props = {
   avtalenummer: string;
+  dekningstype: Dekningstype;
+  startdato: string;
+  arspremie: string;
 };
 
-export function ConfirmationPage({ avtalenummer }: Props) {
+export function ConfirmationPage({ avtalenummer, dekningstype, startdato, arspremie }: Props) {
   return (
     <main className="confirmation-page">
       <div className="confirmation-page__icon" aria-hidden="true">✓</div>
@@ -19,6 +29,18 @@ export function ConfirmationPage({ avtalenummer }: Props) {
         <div className="confirmation-page__detail">
           <dt>Avtalenummer</dt>
           <dd>{avtalenummer}</dd>
+        </div>
+        <div className="confirmation-page__detail">
+          <dt>Dekningstype</dt>
+          <dd>{DEKNINGSTYPE_LABELS[dekningstype]}</dd>
+        </div>
+        <div className="confirmation-page__detail">
+          <dt>Startdato</dt>
+          <dd>{formatDate(startdato)}</dd>
+        </div>
+        <div className="confirmation-page__detail">
+          <dt>Årspremie</dt>
+          <dd>{Number(arspremie).toLocaleString("nb-NO")} kr</dd>
         </div>
       </dl>
 
