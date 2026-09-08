@@ -23,7 +23,7 @@ class BilforsikringService(
     fun kjopForsikring(request: KjopRequest): KjopResponse {
         log.info("Starter kjøp av bilforsikring for kjøretøy {}", request.registreringsnummer)
 
-        val kundeResponse = fagsystemClient.opprettKunde(
+        val kunde = fagsystemClient.opprettKunde(
             OpprettKundeRequest(
                 fodselsnummer = request.fodselsnummer,
                 fornavn = request.fornavn,
@@ -32,9 +32,9 @@ class BilforsikringService(
             )
         )
 
-        val avtaleResponse = fagsystemClient.opprettAvtale(
+        val avtale = fagsystemClient.opprettAvtale(
             OpprettAvtaleRequest(
-                kundenummer = kundeResponse.kundenummer,
+                kundenummer = kunde.kundenummer,
                 registreringsnummer = request.registreringsnummer,
                 bonus = request.bonus
             )
@@ -42,7 +42,7 @@ class BilforsikringService(
 
         brevtjenesteClient.sendAvtale(
             SendAvtaleRequest(
-                avtalenummer = avtaleResponse.avtalenummer,
+                avtalenummer = avtale.avtalenummer,
                 mottakerEpost = request.epost,
                 mottakerNavn = "${request.fornavn} ${request.etternavn}",
                 registreringsnummer = request.registreringsnummer
@@ -51,15 +51,15 @@ class BilforsikringService(
 
         fagsystemClient.oppdaterAvtaleStatus(
             OppdaterAvtaleStatusRequest(
-                avtalenummer = avtaleResponse.avtalenummer,
+                avtalenummer = avtale.avtalenummer,
                 status = AvtaleStatus.AVTALE_SENDT
             )
         )
 
-        log.info("Kjøp fullført for avtale {}", avtaleResponse.avtalenummer)
+        log.info("Kjøp fullført for avtale {}", avtale.avtalenummer)
 
         return KjopResponse(
-            avtalenummer = avtaleResponse.avtalenummer,
+            avtalenummer = avtale.avtalenummer,
             status = AvtaleStatus.AVTALE_SENDT
         )
     }
