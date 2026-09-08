@@ -40,7 +40,7 @@ class BilforsikringServiceTest {
         telefonnummer = "12345678"
     )
 
-    private fun mockHappyPath(avtalenummer: String = "AVT-ABC123") {
+    private fun settOppMocks(avtalenummer: String = "AVT-ABC123") {
         whenever(fagsystemClient.opprettKunde(any())).thenReturn(
             OpprettKundeResponse(kundenummer = "KND-001")
         )
@@ -57,7 +57,7 @@ class BilforsikringServiceTest {
 
     @Test
     fun `kjopForsikring returnerer avtalenummer og AVTALE_SENDT ved suksess`() {
-        mockHappyPath("AVT-ABC123")
+        settOppMocks("AVT-ABC123")
 
         val response = service.kjopForsikring(gyldigRequest)
 
@@ -68,7 +68,7 @@ class BilforsikringServiceTest {
 
     @Test
     fun `kjopForsikring returnerer startdato og dekningstype fra foresporselen`() {
-        mockHappyPath()
+        settOppMocks()
 
         val response = service.kjopForsikring(gyldigRequest)
 
@@ -78,7 +78,7 @@ class BilforsikringServiceTest {
 
     @Test
     fun `kjopForsikring oppretter kunde med riktige persondata`() {
-        mockHappyPath()
+        settOppMocks()
 
         service.kjopForsikring(gyldigRequest)
 
@@ -93,7 +93,7 @@ class BilforsikringServiceTest {
 
     @Test
     fun `kjopForsikring oppretter avtale med kundenummer fra fagsystem`() {
-        mockHappyPath()
+        settOppMocks()
 
         service.kjopForsikring(gyldigRequest)
 
@@ -108,7 +108,7 @@ class BilforsikringServiceTest {
 
     @Test
     fun `kjopForsikring sender avtale til korrekt epost med riktig avtalenummer`() {
-        mockHappyPath("AVT-ABC123")
+        settOppMocks("AVT-ABC123")
 
         service.kjopForsikring(gyldigRequest)
 
@@ -122,7 +122,7 @@ class BilforsikringServiceTest {
 
     @Test
     fun `kjopForsikring oppdaterer avtalestatus til AVTALE_SENDT etter brevutsending`() {
-        mockHappyPath("AVT-ABC123")
+        settOppMocks("AVT-ABC123")
 
         service.kjopForsikring(gyldigRequest)
 

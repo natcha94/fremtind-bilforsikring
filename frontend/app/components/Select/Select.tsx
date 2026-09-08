@@ -2,14 +2,9 @@ import "./Select.scss";
 import { clsx } from "clsx";
 import { type UseFormRegisterReturn } from "react-hook-form";
 
-type SelectOption = {
-  label: string;
-  value: string;
-};
-
 type SelectProps = {
   id: string;
-  options: SelectOption[];
+  options: { label: string; value: string }[];
   placeholder?: string;
   registration?: UseFormRegisterReturn;
   error?: boolean;

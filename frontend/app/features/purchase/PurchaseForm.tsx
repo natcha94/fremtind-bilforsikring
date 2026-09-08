@@ -51,7 +51,7 @@ export function PurchaseForm() {
         <FormField
           id="reg-number"
           label="Bilens registreringsnummer"
-          placeholder="E.g. AB 12345"
+          placeholder="F.eks. AB 12345"
           registration={register("registreringsnummer")}
           error={errors.registreringsnummer?.message}
         />

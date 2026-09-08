@@ -18,7 +18,7 @@ export function FormField({ id, label, type = "text", placeholder, children, err
       <label className="form-field__label" htmlFor={id}>
         {label}
       </label>
-      {children ?? (
+      {children ? children : (
         <input
           className={clsx("form-field__input", error && "form-field__input--error")}
           id={id}

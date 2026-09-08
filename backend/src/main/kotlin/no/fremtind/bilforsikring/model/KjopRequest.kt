@@ -8,7 +8,7 @@ import java.time.LocalDate
 
 data class KjopRequest(
     @field:NotBlank(message = "Registreringsnummer er påkrevd")
-    @field:Pattern(regexp = "^[A-Za-z]{2}\\s?\\d{5}$", message = "Ugyldig format (E.g. AB 12345)")
+    @field:Pattern(regexp = "^[A-Za-z]{2}\\s?\\d{5}$", message = "Ugyldig format (f.eks. AB 12345)")
     val registreringsnummer: String,
 
     @field:NotBlank(message = "Bonus er påkrevd")
