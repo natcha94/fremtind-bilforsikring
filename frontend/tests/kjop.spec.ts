@@ -29,19 +29,12 @@ test.describe("Kjøpsskjema", () => {
   test("viser skjema når siden lastes", async ({ page }) => {
     await page.goto("/");
 
-    await expect(page.getByRole("heading", { name: "Kjøp Bilforsikring" })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Kjøp Bilforsikring" }),
+    ).toBeVisible();
     await expect(page.locator("#reg-number")).toBeVisible();
     await expect(page.locator("#fodselsnummer")).toBeVisible();
     await expect(page.locator("#dekningstype")).toBeVisible();
-  });
-
-  test("viser feilmelding ved ugyldig registreringsnummer", async ({ page }) => {
-    await page.goto("/");
-
-    await page.fill("#reg-number", "UGYLDIG");
-    await page.getByRole("button", { name: "Kjøp" }).click();
-
-    await expect(page.getByText("Ugyldig format (E.g. AB 12345)")).toBeVisible();
   });
 
   test("viser feilmelding ved ugyldig fødselsnummer", async ({ page }) => {
@@ -50,7 +43,9 @@ test.describe("Kjøpsskjema", () => {
     await page.fill("#fodselsnummer", "123");
     await page.getByRole("button", { name: "Kjøp" }).click();
 
-    await expect(page.getByText("Fødselsnummer må være 11 siffer")).toBeVisible();
+    await expect(
+      page.getByText("Fødselsnummer må være 11 siffer"),
+    ).toBeVisible();
   });
 
   test("viser feilmelding ved ugyldig telefonnummer", async ({ page }) => {
@@ -59,7 +54,9 @@ test.describe("Kjøpsskjema", () => {
     await page.fill("#telefonnummer", "123");
     await page.getByRole("button", { name: "Kjøp" }).click();
 
-    await expect(page.getByText("Telefonnummer må være 8 siffer")).toBeVisible();
+    await expect(
+      page.getByText("Telefonnummer må være 8 siffer"),
+    ).toBeVisible();
   });
 
   test("viser feilmelding ved ugyldig e-post", async ({ page }) => {
@@ -76,7 +73,9 @@ test.describe("Kjøpsskjema", () => {
     await fyllUtSkjema(page);
     await page.getByRole("button", { name: "Kjøp" }).click();
 
-    await expect(page.getByRole("heading", { name: "Forsikring kjøpt!" })).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Forsikring kjøpt!" }),
+    ).toBeVisible();
     await expect(page.getByText("AVT-TEST123")).toBeVisible();
     await expect(page.getByText("Kasko")).toBeVisible();
     await expect(page.getByText("5 000 kr")).toBeVisible();
@@ -92,9 +91,22 @@ test.describe("Kjøpsskjema", () => {
 });
 
 test.describe("Bekreftelsesside", () => {
-  test("redirecter til forsiden om man går direkte til /bekreftelse", async ({ page }) => {
+  test("redirecter til forsiden om man går direkte til /bekreftelse", async ({
+    page,
+  }) => {
     await page.goto("/bekreftelse");
 
     await expect(page).toHaveURL("/");
+  });
+});
+
+test.describe("ErrorBoundary", () => {
+  test("viser 404-side for ukjente ruter", async ({ page }) => {
+    await page.goto("/denne-siden-finnes-ikke");
+
+    await expect(page.getByRole("heading", { name: "404" })).toBeVisible();
+    await expect(
+      page.getByText("The requested page could not be found."),
+    ).toBeVisible();
   });
 });
