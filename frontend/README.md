@@ -1,87 +1,60 @@
-# Welcome to React Router!
+# Bilforsikring – Frontend
 
-A modern, production-ready template for building full-stack React applications using React Router.
+React Router v7 (SSR) app som lar kunden kjøpe bilforsikring. Skjemaet sender data til integrasjonslaget, og ved suksess vises en bekreftelsesside med avtalenummer og prisinformasjon.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
-
-## Features
-
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
-
-## Getting Started
-
-### Installation
-
-Install the dependencies:
+## Kom i gang
 
 ```bash
 npm install
 ```
 
-### Development
+Kopier `.env.example` til `.env` og sett riktig URL til backend:
 
-Start the development server with HMR:
+```bash
+cp .env.example .env
+```
+
+```
+API_URL=http://localhost:8080
+```
+
+Start utviklingsserver:
 
 ```bash
 npm run dev
 ```
 
-Your application will be available at `http://localhost:5173`.
+Appen kjører på [http://localhost:5173](http://localhost:5173).
 
-## Building for Production
+## Scripts
 
-Create a production build:
+| Kommando | Beskrivelse |
+|---|---|
+| `npm run dev` | Start dev-server med HMR |
+| `npm run build` | Bygg for produksjon |
+| `npm run start` | Start produksjonsserver |
+| `npm run typecheck` | Kjør TypeScript-sjekk |
+| `npm run test:e2e` | Kjør Playwright-tester |
+
+## Tester
+
+E2E-testene bruker Playwright og starter en mock-backend automatisk på port 3001, så du trenger ikke ha den ekte backend kjørende.
 
 ```bash
-npm run build
+npm run test:e2e
 ```
 
-## Deployment
+Merk: dev-serveren på port 5173 må ikke kjøre når du kjører testene, da Playwright starter sin egen instans på port 5174.
 
-### Docker Deployment
-
-To build and run using Docker:
-
-```bash
-docker build -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
-```
-
-The containerized application can be deployed to any platform that supports Docker, including:
-
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
-
-### DIY Deployment
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
+## Struktur
 
 ```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
+app/
+  features/purchase/   # Kjøpsskjema og bekreftelsesside
+  components/          # Gjenbrukbare UI-komponenter
+  routes/              # React Router ruter (home, bekreftelse)
+  sessions.server.ts   # Session-håndtering for bekreftelsesdata
+tests/
+  kjop.spec.ts         # E2E-tester for kjøpsflyt
+  mock-api.js          # Mock-backend for tester
 ```
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
-
----
-
-Built with ❤️ using React Router.
